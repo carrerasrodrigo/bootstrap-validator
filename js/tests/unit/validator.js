@@ -326,4 +326,26 @@ $(function () {
     ok(form.find('.help-block').html() === 'original content', 'help block content restored')
     ok(!form.find('button').is('.disabled'), 're-enabled submit button')
   })
+
+  test('should only validate elements in the current selector', function () {
+    var form = '<form>'
+      + '<div class="form-group">'
+      +   '<input name="validateme" type="text" class="only-validate-this" data-error="error message" required>'
+      +   '<div class="help-block with-errors"></div>'
+      + '</div>'
+      + '<div class="form-group">'
+      +   '<input name="dontvalidateme" type="text" data-error="error message" required>'
+      +   '<div class="help-block with-errors"></div>'
+      + '</div>'
+      + '<button type="submit">Submit</button>'
+      + '</form>'
+
+    form = $(form)
+      .appendTo('#qunit-fixture')
+      .validator({'inputSelector': '.only-validate-this'})
+      .validator('validate')
+
+    ok(form.find('.form-group.has-error [name="validateme"]'), 'only validate elements that are in the selector')
+    ok(!form.find('.form-group.has-error [name="dontvalidateme"]').length, 'dont validate elements that are not in the selector')
+  })
 })
