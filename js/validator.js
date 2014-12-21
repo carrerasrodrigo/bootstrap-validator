@@ -55,6 +55,7 @@
   Validator.DEFAULTS = {
     delay: 500,
     html: false,
+    inputSelector: ':enabled',
     errors: {
       match: 'Does not match',
       minlength: 'Not long enough',
@@ -158,7 +159,7 @@
     var delay = this.options.delay
 
     this.options.delay = 0
-    this.$element.find(':input').trigger('input')
+    this.$element.find(':input' + this.options.inputSelector).trigger('input')
     this.options.delay = delay
 
     return this
@@ -198,7 +199,7 @@
       return !!($(this).data('bs.validator.errors') || []).length
     }
 
-    return !!this.$element.find(':input:enabled').filter(fieldErrors).length
+    return !!this.$element.find(':input' + this.options.inputSelector).filter(fieldErrors).length
   }
 
   Validator.prototype.isIncomplete = function () {
@@ -208,7 +209,7 @@
                                         $.trim(this.value) === ''
     }
 
-    return !!this.$element.find(':input[required]:enabled').filter(fieldIncomplete).length
+    return !!this.$element.find(':input[required]' + this.options.inputSelector).filter(fieldIncomplete).length
   }
 
   Validator.prototype.onSubmit = function (e) {
